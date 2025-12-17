@@ -8,15 +8,12 @@ on:
 
 jobs:
   build:
-    runs-on: label-1
+    runs-on: self-hosted
 
     steps:
       - uses: actions/checkout@v4
 
       - name: Build Docker Image
         run: |
-          docker build \
-            -t my-image-name:${{ github.run_number }} \
-            -f src/adservice/Dockerfile \
-            src/adservice
+          docker build -t my-image:latest -f src/adservice/Dockerfile src/adservice
 
