@@ -12,8 +12,28 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
+      # ------------------------------------------
+      # 1. Build Docker Image
+      # ------------------------------------------
       - name: Build Docker Image
         run: |
-          docker build -t my-image:latest -f src/adservice/Dockerfile src/adservice
-
+          docker build -t adservice:latest -f src/adservice/Dockerfile src/adservice
+      # ------------------------------------------
+      # 2. Trivy Vulnerability Scan (HTML Report)
+      # ------------------------------------------
+      - name: Run Trivy Scan (HTML)
+        run: |
+          mkdir -p trivy-report
+          trivy image --format template \
+            --template "@contrib/html.tpl" \
+            -o trivy-report/scan.html \
+             adservice:latest
+      # ------------------------------------------
+      # 3. Upload HTML Report Artifact
+      # ------------------------------------------
+      - name: Upload Trivy Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-html-report
+          path: trivy-report/scan.html
+          retention-days: 30
