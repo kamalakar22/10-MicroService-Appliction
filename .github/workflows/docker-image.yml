@@ -23,10 +23,11 @@ jobs:
       # ------------------------------------------
       - name: Run Trivy Scan (HTML)
         run: |
-          mkdir -p trivy-report
-          trivy image --format template \
-            --template "@contrib/html.tpl" \
-            -o trivy-report/scan.html \
+           mkdir -p trivy-report
+           trivy image \
+           --format template \
+           --template "/usr/local/share/trivy/contrib/html.tpl" \
+           -o trivy-report/scan.html \
              adservice:latest
       # ------------------------------------------
       # 3. Upload HTML Report Artifact
