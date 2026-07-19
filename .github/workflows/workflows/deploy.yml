@@ -1,0 +1,26 @@
+name: Build and push Docker image
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure login (OIDC, no secrets)
+        uses: azure/login@v2
+        with:
+          client-id: 384d0483-fce0-4586-ad5e-8229c916e404
+          tenant-id: 5959310f-363b-441f-90f2-eb9f32a53370
+          subscription-id: b94cec4c-1cb2-4b30-959d-7ba945b09c4a
+
+      - name: Build and push to ACR
+        run: |
+          az acr build  --image myapp:${{ github.sha }} .
